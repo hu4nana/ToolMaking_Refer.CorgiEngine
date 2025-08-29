@@ -178,7 +178,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BlockingActionsStates: 
   BlockingConditionStates: 
-  maxHP: 100
+  maxHP: 500
   curHP: 0
 --- !u!61 &8026344097139937962
 BoxCollider2D:
@@ -240,7 +240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BlockingActionsStates: 02000000030000000400000005000000060000000700000008000000
   BlockingConditionStates: 
-  moveSpeed: 3
+  moveSpeed: 8
 --- !u!114 &4263819636889370945
 MonoBehaviour:
   m_ObjectHideFlags: 0

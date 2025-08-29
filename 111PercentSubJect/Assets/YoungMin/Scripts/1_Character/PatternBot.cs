@@ -8,11 +8,11 @@ public class PatternBot : MonoBehaviour, IInputDriver
     public float detectionRadius = 60f;  // 아주 크게 잡아 거리 무시
 
     [Header("Pattern Durations")]
-    public Vector2 moveBeforeAttack = new Vector2(2f, 5f); // 2~5초 이동 후 평타
-    public Vector2 moveBeforeSkill = new Vector2(1f, 4f); // 평타 후 1~4초 이동 후 스킬
+    public Vector2 moveBeforeAttack = new Vector2(0.5f, 1.4f); // a~b초 이동 후 평타
+    public Vector2 moveBeforeSkill = new Vector2(0.7f, 1.5f); // 평타 후 x~y초 이동 후 스킬
 
     [Header("Skill Casting")]
-    public float castTime = 0.35f;       // 스킬 캐스팅 동안 정지
+    public float castTime = 0.15f;       // 스킬 캐스팅 동안 정지
     public bool faceTargetOnFire = true; // 발사/시전 직전 타겟 방향으로 회전
 
     [Header("Collision (Platform)")]
@@ -56,7 +56,7 @@ public class PatternBot : MonoBehaviour, IInputDriver
                 if (now >= _phaseUntil) StartMoveA(now);
                 break;
 
-            // 2~5초 이동
+            // 이동
             case Phase.MoveA:
                 s.Horizontal = _dir;
                 HandleWallFlip(now, ref s);
@@ -73,7 +73,7 @@ public class PatternBot : MonoBehaviour, IInputDriver
                 StartMoveB(now);
                 break;
 
-            // 1~4초 이동
+            // 이동
             case Phase.MoveB:
                 s.Horizontal = _dir;
                 HandleWallFlip(now, ref s);

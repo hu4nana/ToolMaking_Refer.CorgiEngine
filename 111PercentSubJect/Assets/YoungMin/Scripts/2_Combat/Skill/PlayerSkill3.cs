@@ -55,7 +55,7 @@ public class PlayerSkill3 : CharacterModule
         _cooldownTimer = CooldownTime;
 
         // 예: 투사체 생성 / 애니메이션 실행
-        Instantiate(CarrotRain, Vector2.right * _character.target.transform.position.x+Vector2.up*8.5f
+        Instantiate(CarrotRain, Vector2.right * _character.target.transform.position.x+ Vector2.up*4
             , Quaternion.identity);
 
         // 일정 시간 뒤 Idle로 복귀시키고 싶으면 코루틴 사용

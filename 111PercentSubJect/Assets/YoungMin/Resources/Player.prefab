@@ -361,7 +361,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BlockingActionsStates: 
   BlockingConditionStates: 
-  maxHP: 100
+  maxHP: 270
   curHP: 0
 --- !u!114 &3788010946861520014
 MonoBehaviour:
@@ -425,4 +425,4 @@ MonoBehaviour:
   BlockingActionsStates: 
   BlockingConditionStates: 
   CarrotRain: {fileID: 4047223750542996315, guid: e63e79d47e3fec9408d255ebb020ae1f, type: 3}
-  CooldownTime: 2
+  CooldownTime: 17
