@@ -18,8 +18,17 @@ public class HorizontalMove : CharacterModule
 
     public override void HandleInput()
     {
-        //HandleHorizontalMovement();
         if (!ModuleAuthorized) return;
+
+        // CC: Root/Frozen이면 이동 금지
+        var cc = _character.ConditionState.CurrentState;
+        if (cc == CharacterStatements.ConditionStatement.Root ||
+            cc == CharacterStatements.ConditionStatement.Frozen)
+        {
+            _rigid.linearVelocity = Vector2.up * _rigid.linearVelocityY; // 수평 0
+            return;
+        }
+
         inputX = _character.Input_Horizontal;
         if (_character.isGrounded)
         {

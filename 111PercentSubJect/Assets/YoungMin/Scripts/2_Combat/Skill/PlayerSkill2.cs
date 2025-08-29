@@ -1,22 +1,29 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PlayerSkill2 : CharacterModule
 {
     public GameObject Chest;
-    public float CooldownTime = 2f;  // ½ºÅ³ ÄğÅ¸ÀÓ
+    public float CooldownTime = 2f;  // ìŠ¤í‚¬ ì¿¨íƒ€ì„
     private float _cooldownTimer = 0f;
-    private bool _isCasting = false; // ½ºÅ³ »ç¿ë Áß ¿©ºÎ
+    private bool _isCasting = false; // ìŠ¤í‚¬ ì‚¬ìš© ì¤‘ ì—¬ë¶€
+
+
+    public float GetCoolDownTimer()
+    {
+        return _cooldownTimer;
+    }
+
 
     public override void ProcessModule()
     {
-        // ÄğÅ¸ÀÓ °»½Å
+        // ì¿¨íƒ€ì„ ê°±ì‹ 
         if (_cooldownTimer > 0f)
         {
             _cooldownTimer -= Time.deltaTime;
             if (_cooldownTimer <= 0f)
             {
                 _cooldownTimer = 0f;
-                // ÄğÅ¸ÀÓ ³¡ ¡æ ´Ù½Ã »ç¿ë °¡´É
+                // ì¿¨íƒ€ì„ ë â†’ ë‹¤ì‹œ ì‚¬ìš© ê°€ëŠ¥
                 _isCasting = false;
             }
         }
@@ -27,10 +34,10 @@ public class PlayerSkill2 : CharacterModule
     public override void HandleInput()
     {
         if (!ModuleAuthorized) return;
-        if (_isCasting) return; // ½ºÅ³ ½ÃÀü Áß¿£ ¹«½Ã
-        if (_cooldownTimer > 0f) return; // ÄğÅ¸ÀÓ Áß¿£ ¹«½Ã
+        if (_isCasting) return; // ìŠ¤í‚¬ ì‹œì „ ì¤‘ì—” ë¬´ì‹œ
+        if (_cooldownTimer > 0f) return; // ì¿¨íƒ€ì„ ì¤‘ì—” ë¬´ì‹œ
 
-        if (_cooldownTimer==0f && _character.Input_Skill2) // ¿¹½Ã: ½ºÅ³2 ÀÔ·Â
+        if (_cooldownTimer==0f && _character.Input_Skill2) // ì˜ˆì‹œ: ìŠ¤í‚¬2 ì…ë ¥
         {
             UseSkill();
         }
@@ -40,20 +47,20 @@ public class PlayerSkill2 : CharacterModule
     {
         Debug.Log("Skill2 Used!");
 
-        // »óÅÂ ÀüÈ¯ ¡æ ´Ù¸¥ ¸ğµâ Â÷´Ü
+        // ìƒíƒœ ì „í™˜ â†’ ë‹¤ë¥¸ ëª¨ë“ˆ ì°¨ë‹¨
         _character.ActionState.ChangeState(CharacterStatements.ActionStatement.Skill1);
         _rigid.linearVelocity = Vector2.zero;
         _character.isFacingRight = true;
-        // ½ºÅ³ ¹ßµ¿
+        // ìŠ¤í‚¬ ë°œë™
         _isCasting = true;
 
-        // ÄğÅ¸ÀÓ ½ÃÀÛ
+        // ì¿¨íƒ€ì„ ì‹œì‘
         _cooldownTimer = CooldownTime;
 
-        // ¿¹: Åõ»çÃ¼ »ı¼º / ¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇà
+        // ì˜ˆ: íˆ¬ì‚¬ì²´ ìƒì„± / ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰
         Instantiate(Chest, Vector2.right * _character.target.transform.position.x, Quaternion.identity);
 
-        // ÀÏÁ¤ ½Ã°£ µÚ Idle·Î º¹±Í½ÃÅ°°í ½ÍÀ¸¸é ÄÚ·çÆ¾ »ç¿ë
+        // ì¼ì • ì‹œê°„ ë’¤ Idleë¡œ ë³µê·€ì‹œí‚¤ê³  ì‹¶ìœ¼ë©´ ì½”ë£¨í‹´ ì‚¬ìš©
         _character.StartCoroutine(BackToIdleAfter(1f));
     }
 

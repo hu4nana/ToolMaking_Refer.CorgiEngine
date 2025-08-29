@@ -4,7 +4,7 @@ public class Health : CharacterModule, IDamageable
     public float maxHP = 100;
 
     public float curHP;
-    bool dead;
+    public bool dead {  get; private set; }
 
     public override void Initialization()
     {

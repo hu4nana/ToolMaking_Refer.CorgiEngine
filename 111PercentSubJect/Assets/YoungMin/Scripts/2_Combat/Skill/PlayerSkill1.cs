@@ -7,6 +7,12 @@ public class PlayerSkill1 : CharacterModule
     private float _cooldownTimer = 0f;
     private bool _isCasting = false; // 스킬 사용 중 여부
 
+
+    public float GetCoolDownTimer()
+    {
+        return _cooldownTimer;
+    }
+
     public override void ProcessModule()
     {
         // 쿨타임 갱신

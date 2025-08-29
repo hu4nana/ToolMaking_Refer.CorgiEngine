@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 
 // Basic Movement is Left, Right That's it
@@ -21,10 +20,33 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 // 공통되는 행동
 // Move, NormalAttack, Skill
+
+public struct InputSnapshot
+{
+    public float Horizontal;     // -1 ~ 1
+    public bool NormalAttack;    // 해당 프레임만 true
+    public bool Skill1;
+    public bool Skill2;
+    public bool Skill3;
+    public bool Skill4;
+
+    public static InputSnapshot Empty => new InputSnapshot();
+}
+
+public interface IInputDriver
+{
+    // Character가 매 프레임 호출해서 입력을 가져옵니다.
+    InputSnapshot CollectInput(Character self);
+}
+
+
 public class Character : MonoBehaviour
 {
     public enum FacingDirection { Left, Right }
+    public enum CharacterType { Player, AI}
 
+    [Header("CharacterType")]
+    public CharacterType _characterType;
 
     [Header("Name")]
     public string id;
@@ -32,7 +54,6 @@ public class Character : MonoBehaviour
 
     readonly List<CharacterModule> modules = new();
 
-    protected int hp;
     protected Animator ani;
     public Rigidbody2D rigid { get; private set; }
 
@@ -51,13 +72,17 @@ public class Character : MonoBehaviour
 
     public GameObject target;
 
-    #region About Input
+    #region About Player Input
     public float Input_Horizontal { get; private set;}
     public bool Input_NormalAttack { get; private set; }
     public bool Input_Skill1 { get; private set; }
     public bool Input_Skill2 { get; private set; }
     public bool Input_Skill3 { get; private set; }
     public bool Input_Skill4 { get; private set; }
+    #endregion
+
+    #region AI Input Driver
+    private IInputDriver _inputDriver;
     #endregion
 
     #region About GroundCheck
@@ -112,6 +137,8 @@ public class Character : MonoBehaviour
         col = GetComponent<BoxCollider2D>();
 
         CacheModules();
+
+        _inputDriver = GetComponent<IInputDriver>(); // 같은 GO에 붙은 봇/플레이어 입력 드라이버
     }
 
     private void Update()
@@ -122,16 +149,48 @@ public class Character : MonoBehaviour
 
     protected virtual void EveryFrame()
     {
-        InputHandler();
+        // 1) 입력
+        if (_characterType == CharacterType.Player)
+        {
+            InputHandler(); // 기존 플레이어 입력
+        }
+        else // AI
+        {
+            if (_inputDriver != null)
+            {
+                var s = _inputDriver.CollectInput(this);
+                ApplyInputSnapshot(s);
+            }
+            else
+            {
+                ApplyInputSnapshot(InputSnapshot.Empty);
+            }
+        }
+
+        // 2) 모듈 처리
         if (Time.timeScale != 0f)
         {
             ProcessModules();
             LateProcessModules();
         }
 
+        // 3) 공용 시스템
         GroundCheck();
         UpdateAnimators();
         RotateModel();
+    }
+
+    public void ApplyInputSnapshot(InputSnapshot s)
+    {
+        Input_Horizontal = Mathf.Clamp(s.Horizontal, -1f, 1f);
+        Input_NormalAttack = s.NormalAttack;
+        Input_Skill1 = s.Skill1;
+        Input_Skill2 = s.Skill2;
+        Input_Skill3 = s.Skill3;
+        Input_Skill4 = s.Skill4;
+
+        if (!Mathf.Approximately(Input_Horizontal, 0f))
+            isFacingRight = Input_Horizontal > 0f;
     }
     protected virtual void InputHandler()
     {
